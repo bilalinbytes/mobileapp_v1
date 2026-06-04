@@ -1,0 +1,50 @@
+.view { display: flex; flex-direction: column; flex: 1; overflow: hidden; background: #fafaf9; }
+
+.header { background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.07); padding: 14px 28px; flex-shrink: 0; }
+.title  { font-size: 17px; font-weight: 600; color: #1a1a18; font-family: var(--font-lora), Georgia, serif; }
+.sub    { font-size: 11px; color: #888680; margin-top: 2px; font-family: var(--font-dm-sans), system-ui, sans-serif; }
+
+.body { flex: 1; overflow-y: auto; padding: 20px 28px; display: flex; flex-direction: column; gap: 14px; }
+
+.chartsGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+.chartCard {
+  background: #ffffff; border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.07); padding: 16px 18px;
+}
+
+.chartHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.chartTitle  { font-size: 13px; font-weight: 600; color: #1a1a18; font-family: var(--font-dm-sans), system-ui, sans-serif; }
+.chartRange  { font-size: 11px; font-weight: 600; font-family: var(--font-dm-sans), system-ui, sans-serif; }
+
+.sparkWrap { height: 40px; background: #f8f7f5; border-radius: 6px; overflow: hidden; padding: 2px 6px; margin-bottom: 4px; }
+
+.sparkDates { display: flex; justify-content: space-between; }
+.sparkDate  { font-size: 9px; color: #aaa9a6; font-family: var(--font-dm-sans), system-ui, sans-serif; }
+
+.logsCard { background: #ffffff; border-radius: 14px; border: 1px solid rgba(0,0,0,0.07); padding: 20px 22px; }
+
+.sectionTitle { font-size: 14px; font-weight: 600; color: #1a1a18; font-family: var(--font-lora), Georgia, serif; margin-bottom: 14px; }
+
+.logItem {
+  padding: 14px 0; border-bottom: 1px solid rgba(0,0,0,0.06);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.logItem:last-child { border-bottom: none; }
+
+.logDate { font-size: 13px; font-weight: 600; color: #132d36; font-family: var(--font-lora), Georgia, serif; letter-spacing: -0.01em; }
+
+.logVitals { display: flex; gap: 20px; }
+
+.logVital { display: flex; flex-direction: column; align-items: center; }
+
+.logVal { font-size: 18px; font-weight: 700; color: #1a1a18; font-family: var(--font-lora), Georgia, serif; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.logWarn { color: #e24b4a; }
+.logLbl  { font-size: 9px; color: #aaa9a6; text-transform: uppercase; letter-spacing: 0.05em; font-family: var(--font-dm-sans), system-ui, sans-serif; }
+
+.logMeds { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.medTaken  { font-size: 11px; font-weight: 500; color: #126969; background: rgba(18,105,105,0.08); padding: 2px 9px; border-radius: 999px; font-family: var(--font-dm-sans), system-ui, sans-serif; }
+.medMissed { font-size: 11px; font-weight: 500; color: #c94d49; background: #fdecea; padding: 2px 9px; border-radius: 999px; font-family: var(--font-dm-sans), system-ui, sans-serif; }
+
+.logNotes { font-size: 12px; color: #888680; font-style: italic; font-family: var(--font-dm-sans), system-ui, sans-serif; }

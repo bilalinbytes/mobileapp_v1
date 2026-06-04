@@ -1,0 +1,110 @@
+.sidebar {
+  width: 68px;
+  background: linear-gradient(175deg, #173d45 0%, #132d36 60%, #112931 100%);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.nav { display: flex; flex-direction: column; padding: 12px 0; gap: 2px; flex: 1; }
+.navItem {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 5px; width: 100%; padding: 10px 6px;
+  border: none; background: none; cursor: pointer;
+  position: relative; transition: background 0.15s;
+}
+
+.navItem:hover { background: rgba(255,255,255,0.07); }
+
+.navItemActive { background: rgba(255,255,255,0.12); }
+
+.navItemActive::before {
+  content: "";
+  position: absolute; left: 0; top: 20%; bottom: 20%;
+  width: 3px; background: #7ec8c8;
+  border-radius: 0 3px 3px 0;
+}
+
+.iconWrap {
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.navItemActive .iconWrap { color: #ffffff; }
+.navItem:hover .iconWrap { color: #ffffff; }
+
+.navLabels {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.navLabel {
+  font-size: 10px; font-weight: 500;
+  color: rgba(255, 255, 255, 0.45); text-align: center; line-height: 1;
+}
+.navLabelHi {
+  font-size: 9px; font-weight: 400;
+  color: rgba(255, 255, 255, 0.3); text-align: center; line-height: 1;
+}
+.navItemActive .navLabel, .navItemActive .navLabelHi { color: #ffffff; }
+.navItem:hover .navLabel, .navItem:hover .navLabelHi { color: #ffffff; }
+
+@media (max-width: 760px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 80;
+    width: 100%;
+    height: 66px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 -12px 28px rgba(19,45,54,0.18);
+  }
+
+  .nav {
+    flex-direction: row;
+    padding: 0 6px;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navItem {
+    min-width: 72px;
+    flex: 1 0 72px;
+    padding: 7px 4px 6px;
+    gap: 4px;
+  }
+
+  .navItemActive::before {
+    left: 20%;
+    right: 20%;
+    top: 0;
+    bottom: auto;
+    width: auto;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+  }
+
+  .iconWrap {
+    width: 20px;
+    height: 20px;
+  }
+
+  .navLabel {
+    font-size: 9px;
+  }
+
+  .navLabelHi {
+    font-size: 8px;
+  }
+}
+
