@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import { PatientProvider, usePatient } from "@/contexts/PatientContext";
 import { createClient } from "@/lib/supabase/client";
 import { PatientTopNav } from "@/components/patient/PatientTopNav";
@@ -78,10 +79,10 @@ function PrescriptionCard() {
     return () => { cancelled = true; };
   }, []);
 
-  if (loading || !latestPrescription) return null;
+  if (loading || (!latestPrescription && !instruction?.instruction_text)) return null;
 
-  const activeMeds = latestPrescription.medications.filter((med) => !med.end_date || med.end_date >= new Date().toISOString().split("T")[0]!);
-  const displayedMeds = activeMeds.length > 0 ? activeMeds : latestPrescription.medications;
+  const activeMeds = latestPrescription?.medications.filter((med) => !med.end_date || med.end_date >= new Date().toISOString().split("T")[0]!) ?? [];
+  const displayedMeds = latestPrescription ? (activeMeds.length > 0 ? activeMeds : latestPrescription.medications) : [];
 
   return (
     <section style={{
@@ -95,18 +96,22 @@ function PrescriptionCard() {
       <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "flex-start", marginBottom: 12 }}>
         <div>
           <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: "#126969", textTransform: "uppercase", letterSpacing: "0.06em", fontFamily: "var(--font-dm-sans), system-ui, sans-serif" }}>
-            Latest Prescription
+            {latestPrescription ? "Latest Prescription" : "Doctor Instructions"}
           </p>
-          <p style={{ margin: "4px 0 0", fontSize: 13, color: "#6d8794", fontFamily: "var(--font-dm-sans), system-ui, sans-serif" }}>
-            Prescribed {formatPrescriptionDate(latestPrescription.date)}
-          </p>
+          {latestPrescription && (
+            <p style={{ margin: "4px 0 0", fontSize: 13, color: "#6d8794", fontFamily: "var(--font-dm-sans), system-ui, sans-serif" }}>
+              Prescribed {formatPrescriptionDate(latestPrescription.date)}
+            </p>
+          )}
         </div>
-        <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 700, color: "#126969", background: "rgba(18,105,105,0.08)", borderRadius: 999, padding: "4px 9px", fontFamily: "var(--font-dm-sans), system-ui, sans-serif" }}>
-          {activeMeds.length} active
-        </span>
+        {latestPrescription && (
+          <span style={{ flexShrink: 0, fontSize: 11, fontWeight: 700, color: "#126969", background: "rgba(18,105,105,0.08)", borderRadius: 999, padding: "4px 9px", fontFamily: "var(--font-dm-sans), system-ui, sans-serif" }}>
+            {activeMeds.length} active
+          </span>
+        )}
       </div>
 
-      <div style={{ display: "grid", gap: 8 }}>
+      {latestPrescription && <div style={{ display: "grid", gap: 8 }}>
         {displayedMeds.slice(0, 5).map((med) => (
           <div key={med.id} style={{ display: "flex", gap: 10, alignItems: "center", padding: "9px 10px", borderRadius: 8, background: "#f8f7f5", border: "1px solid rgba(19,45,54,0.06)" }}>
             <div style={{ minWidth: 0, flex: 1 }}>
@@ -120,7 +125,7 @@ function PrescriptionCard() {
             </div>
           </div>
         ))}
-      </div>
+      </div>}
 
       {displayedMeds.length > 5 && (
         <p style={{ margin: "8px 0 0", fontSize: 11, color: "#6d8794", textAlign: "center", fontFamily: "var(--font-dm-sans), system-ui, sans-serif" }}>
@@ -406,9 +411,17 @@ function PatientDashboardPageInner() {
         <main className={styles.content}>
           {view === "home" && (
             <>
-              {!homeData.loading && homeData.hasTodayLog && <PrescriptionCard />}
+              {!homeData.loading && <PrescriptionCard />}
               {renderHome()}
             </>
+          )}
+          {view !== "home" && (
+            <div className={styles.viewBackBar}>
+              <button type="button" className={styles.backButton} onClick={() => setView("home")}>
+                <ArrowLeft size={16} strokeWidth={1.8} />
+                <span>Back</span>
+              </button>
+            </div>
           )}
           {view === "log" && <LogTodayView onLogSubmitted={() => setHomeRefreshKey((key) => key + 1)} />}
           {view === "analytics" && <PatientAnalyticsView patientId={currentPatient.id} />}

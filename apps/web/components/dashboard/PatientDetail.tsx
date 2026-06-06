@@ -1060,7 +1060,11 @@ function TreatmentTab({ patientId }: { patientId: string }) {
 
   const savePrescription = async () => {
     const activeDrafts = draftMeds.filter(m => m.status !== "stopped" && m.drug_name.trim());
-    if (!activeDrafts.length) { setSaveMsg("Add at least one medication."); return; }
+    const hasPatientInstruction = patientInstruction.trim().length > 0;
+    if (!activeDrafts.length && !hasPatientInstruction) {
+      setSaveMsg("Add at least one medication or patient instruction.");
+      return;
+    }
     const instructionWords = countWords(patientInstruction);
     if (instructionWords > PATIENT_INSTRUCTION_WORD_LIMIT) {
       setSaveMsg("Patient instructions must be 50 words or fewer.");
@@ -1101,20 +1105,24 @@ function TreatmentTab({ patientId }: { patientId: string }) {
         body: JSON.stringify(payload),
       });
       if (res.ok) {
-        const pdfResponse = await fetch(`/api/patients/${patientId}/prescriptions?format=pdf&date=${encodeURIComponent(prescriptionDate)}`, {
-          credentials: "include",
-        });
-        if (pdfResponse.ok) {
-          const blob = await pdfResponse.blob();
-          const url = URL.createObjectURL(blob);
-          const anchor = document.createElement("a");
-          anchor.href = url;
-          anchor.download = pdfResponse.headers.get("Content-Disposition")?.match(/filename="(.+)"/)?.[1] ?? `saans-prescription-${prescriptionDate}.pdf`;
-          anchor.click();
-          URL.revokeObjectURL(url);
-          setSaveMsg("Prescription saved and PDF downloaded.");
+        if (activeDrafts.length > 0) {
+          const pdfResponse = await fetch(`/api/patients/${patientId}/prescriptions?format=pdf&date=${encodeURIComponent(prescriptionDate)}`, {
+            credentials: "include",
+          });
+          if (pdfResponse.ok) {
+            const blob = await pdfResponse.blob();
+            const url = URL.createObjectURL(blob);
+            const anchor = document.createElement("a");
+            anchor.href = url;
+            anchor.download = pdfResponse.headers.get("Content-Disposition")?.match(/filename="(.+)"/)?.[1] ?? `saans-prescription-${prescriptionDate}.pdf`;
+            anchor.click();
+            URL.revokeObjectURL(url);
+            setSaveMsg("Prescription saved and PDF downloaded.");
+          } else {
+            setSaveMsg("Prescription saved successfully. PDF download failed.");
+          }
         } else {
-          setSaveMsg("Prescription saved successfully. PDF download failed.");
+          setSaveMsg("Instruction sent to patient.");
         }
         setShowEditor(false);
         setPatientInstruction("");
@@ -1162,8 +1170,8 @@ function TreatmentTab({ patientId }: { patientId: string }) {
       {saveMsg && !showEditor && (
         <div style={{
           padding: "8px 12px", borderRadius: 8, marginBottom: 12, fontSize: 12,
-          background: saveMsg.includes("successfully") ? "#e8f5f1" : "#fdecea",
-          color: saveMsg.includes("successfully") ? "#0f6e56" : "#c94d49",
+          background: saveMsg.includes("failed") || saveMsg.includes("error") || saveMsg.includes("Add ") ? "#fdecea" : "#e8f5f1",
+          color: saveMsg.includes("failed") || saveMsg.includes("error") || saveMsg.includes("Add ") ? "#c94d49" : "#0f6e56",
           fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
         }}>
           {saveMsg}
@@ -1372,7 +1380,7 @@ function TreatmentTab({ patientId }: { patientId: string }) {
           </div>
 
           {saveMsg && (
-            <p style={{ margin: "10px 0 0", fontSize: 12, color: saveMsg.includes("successfully") ? "#0f6e56" : "#c94d49", fontFamily: "var(--font-dm-sans), system-ui, sans-serif" }}>
+            <p style={{ margin: "10px 0 0", fontSize: 12, color: saveMsg.includes("failed") || saveMsg.includes("error") || saveMsg.includes("Add ") ? "#c94d49" : "#0f6e56", fontFamily: "var(--font-dm-sans), system-ui, sans-serif" }}>
               {saveMsg}
             </p>
           )}

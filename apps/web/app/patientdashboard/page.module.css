@@ -21,6 +21,31 @@
   flex-direction: column;
 }
 
+.viewBackBar {
+  flex-shrink: 0;
+  padding: 12px 24px 0;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(18,105,105,0.22);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #126969;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+}
+
+.backButton:hover {
+  background: #f3f8f8;
+}
+
 @media (max-width: 760px) {
   .body {
     flex-direction: column;
@@ -28,5 +53,9 @@
 
   .content {
     padding-bottom: 68px;
+  }
+
+  .viewBackBar {
+    padding: 10px 14px 0;
   }
 }

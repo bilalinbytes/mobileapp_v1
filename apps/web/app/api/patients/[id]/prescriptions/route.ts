@@ -300,8 +300,12 @@ export async function POST(
   const { prescription_date, medications, stopped_medication_ids, replaced_medication_ids } = body;
   const patientInstruction = body.patient_instruction?.trim() ?? "";
 
-  if (!prescription_date || !medications?.length) {
-    return NextResponse.json({ error: "prescription_date and medications are required" }, { status: 400 });
+  if (!prescription_date) {
+    return NextResponse.json({ error: "prescription_date is required" }, { status: 400 });
+  }
+
+  if (!medications?.length && !patientInstruction) {
+    return NextResponse.json({ error: "Add at least one medication or patient instruction" }, { status: 400 });
   }
 
   if (patientInstruction && wordCount(patientInstruction) > PATIENT_INSTRUCTION_WORD_LIMIT) {
@@ -327,14 +331,16 @@ export async function POST(
   }
 
   // Saving the same consultation date replaces that prescription batch instead of stacking duplicates.
-  const { error: deleteExistingError } = await admin
-    .from("medications")
-    .delete()
-    .eq("patient_id", patientId)
-    .eq("start_date", prescription_date);
+  if (medications.length > 0) {
+    const { error: deleteExistingError } = await admin
+      .from("medications")
+      .delete()
+      .eq("patient_id", patientId)
+      .eq("start_date", prescription_date);
 
-  if (deleteExistingError) {
-    return NextResponse.json({ error: deleteExistingError.message }, { status: 500 });
+    if (deleteExistingError) {
+      return NextResponse.json({ error: deleteExistingError.message }, { status: 500 });
+    }
   }
 
   // Insert new/modified medications with the selected prescription date

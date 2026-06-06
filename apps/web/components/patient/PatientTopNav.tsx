@@ -102,7 +102,11 @@ function getPrescriptionNotificationKey(
   prescription: PrescriptionNotification | null,
   instruction: PatientInstruction | null,
 ) {
-  if (!prescription) return null;
+  if (!prescription) {
+    if (!instruction?.instruction_text) return null;
+    return `instruction:${instruction.id}:${normalizeNotificationPart(instruction.instruction_text)}:${instruction.created_at ?? ""}`;
+  }
+
   const medicationParts = prescription.medications
     .map((medication) => [
       medication.drug_name,
@@ -326,15 +330,21 @@ export function PatientTopNav({ activeView, onViewChange }: PatientTopNavProps) 
     : "No prescription yet";
   const prescriptionNotificationKey = getPrescriptionNotificationKey(latestPrescription, latestInstruction);
   const legacyPrescriptionNotificationKey = getLegacyPrescriptionNotificationKey(latestPrescription);
+  const latestPrescriptionAt = latestPrescription?.created_at ?? latestPrescription?.date ?? null;
+  const latestInstructionAt = latestInstruction?.created_at ?? null;
+  const latestEmergencyAt =
+    latestPrescriptionAt && latestInstructionAt
+      ? (new Date(latestInstructionAt).getTime() > new Date(latestPrescriptionAt).getTime() ? latestInstructionAt : latestPrescriptionAt)
+      : latestInstructionAt ?? latestPrescriptionAt;
   const prescriptionSeen =
     prescriptionNotificationKey !== null &&
     (prescriptionNotificationKey === seenPrescriptionKey || legacyPrescriptionNotificationKey === seenPrescriptionKey);
-  const showPrescriptionBadge = latestPrescription
-    ? isWithinOneDay(latestPrescription.created_at, latestPrescription.date) &&
+  const showPrescriptionBadge = prescriptionNotificationKey
+    ? isWithinOneDay(latestEmergencyAt) &&
       !prescriptionSeen
     : false;
   const showPrescriptionNotification =
-    latestPrescription !== null &&
+    prescriptionNotificationKey !== null &&
     (!prescriptionSeen || openedUnreadPrescriptionKey === prescriptionNotificationKey);
   const appointmentNotificationKey = getAppointmentNotificationKey(appointmentNotification);
   const showAppointmentBadge = appointmentNotification
@@ -348,7 +358,7 @@ export function PatientTopNav({ activeView, onViewChange }: PatientTopNavProps) 
     const nextOpen = !notificationsOpen;
 
     if (nextOpen) {
-      if (latestPrescription && showPrescriptionBadge) {
+      if (prescriptionNotificationKey && showPrescriptionBadge) {
         markPrescriptionSeen();
         setOpenedUnreadPrescriptionKey(prescriptionNotificationKey);
       }
@@ -416,29 +426,37 @@ export function PatientTopNav({ activeView, onViewChange }: PatientTopNavProps) 
               )}
               {showPrescriptionNotification ? (
                 <>
-                  <p className={styles.notifTitle}>Emergency Prescription</p>
-                  <p className={styles.notifTime}>
-                    {formatDateTime(latestPrescription.created_at, latestPrescription.date)}
+                  <p className={styles.notifTitle}>
+                    {latestPrescription ? "Emergency Prescription" : "Emergency Instructions"}
                   </p>
-                  <div className={styles.notifPdfCard}>
-                    <Download size={18} strokeWidth={1.8} />
-                    <div>
-                      <p className={styles.notifPdfTitle}>Prescription PDF ready</p>
-                      <p className={styles.notifPdfMeta}>
-                        {latestPrescription.medications.length} medication{latestPrescription.medications.length !== 1 ? "s" : ""} included
-                      </p>
-                    </div>
-                  </div>
-                  <a
-                    className={styles.notifPdfLink}
-                    href={`/api/patient/prescriptions?format=pdf&date=${encodeURIComponent(latestPrescription.date)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={markPrescriptionSeen}
-                  >
-                    <Download size={14} strokeWidth={1.8} />
-                    <span>Open PDF</span>
-                  </a>
+                  <p className={styles.notifTime}>
+                    {formatDateTime(latestEmergencyAt)}
+                  </p>
+                  {latestInstruction?.instruction_text && (
+                    <p className={styles.notifInstruction}>{latestInstruction.instruction_text}</p>
+                  )}
+                  {latestPrescription && (
+                    <>
+                      <div className={styles.notifPdfCard}>
+                        <Download size={18} strokeWidth={1.8} />
+                        <div>
+                          <p className={styles.notifPdfTitle}>Prescription PDF ready</p>
+                          <p className={styles.notifPdfMeta}>
+                            {latestPrescription.medications.length} medication{latestPrescription.medications.length !== 1 ? "s" : ""} included
+                          </p>
+                        </div>
+                      </div>
+                      <a
+                        className={styles.notifPdfLink}
+                        href={`/api/patient/prescriptions?format=pdf&date=${encodeURIComponent(latestPrescription.date)}`}
+                        download
+                        onClick={markPrescriptionSeen}
+                      >
+                        <Download size={14} strokeWidth={1.8} />
+                        <span>Download PDF</span>
+                      </a>
+                    </>
+                  )}
                 </>
               ) : !appointmentNotification ? (
                 <p className={styles.notifEmpty}>No prescription notifications yet.</p>
