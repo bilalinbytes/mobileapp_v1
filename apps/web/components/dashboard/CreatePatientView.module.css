@@ -36,6 +36,7 @@
   display: flex;
   flex: 1;
   overflow: hidden;
+  min-width: 0;
 }
 
 /* ── Step Sidebar ── */
@@ -195,6 +196,7 @@
 /* ── Form main ── */
 .formMain {
   flex: 1;
+  min-width: 0;
   overflow-y: auto;
   padding: 28px 32px;
 }
@@ -449,7 +451,7 @@
 /* Co-morbidities */
 .comorbidGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
   gap: 8px;
 }
 
@@ -629,6 +631,9 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .medHeader {
@@ -758,6 +763,7 @@
 
 /* ── Buttons ── */
 .btnGhost {
+  min-height: 44px;
   padding: 8px 16px;
   border-radius: 9px;
   font-size: 13px;
@@ -773,6 +779,7 @@
 .btnGhost:hover { background: #f5f3ee; }
 
 .btnOutline {
+  min-height: 40px;
   padding: 6px 14px;
   border-radius: 8px;
   font-size: 12px;
@@ -790,6 +797,7 @@
 }
 
 .btnSaveDraft {
+  min-height: 44px;
   padding: 8px 16px;
   border-radius: 9px;
   font-size: 13px;
@@ -805,6 +813,7 @@
 .btnSaveDraft:hover { background: #f5f3ee; }
 
 .btnPrimary {
+  min-height: 44px;
   padding: 10px 24px;
   border-radius: 9px;
   font-size: 13px;
@@ -942,8 +951,10 @@
 
 /* Remove button */
 .removeBtn {
-  width: 22px;
-  height: 22px;
+  min-width: 32px;
+  min-height: 32px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 1px solid rgba(0,0,0,0.1);
   background: none;
@@ -979,4 +990,119 @@
 
 .medRow {
   grid-template-columns: 80px 160px 90px 130px 100px 100px 40px !important;
+}
+
+@media (max-width: 760px) {
+  .view {
+    min-height: 100dvh;
+    overflow: hidden;
+  }
+
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .layout {
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .stepSidebar {
+    width: 100%;
+    max-height: 132px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-direction: row;
+    align-items: stretch;
+    padding: 0 8px;
+  }
+
+  .stepsLabel {
+    display: none;
+  }
+
+  .stepItem {
+    flex: 0 0 132px;
+    padding: 10px 8px;
+  }
+
+  .stepText {
+    min-width: 0;
+  }
+
+  .stepLabel,
+  .stepSub {
+    white-space: normal;
+  }
+
+  .formMain {
+    min-width: 0;
+    padding: 18px 16px 96px;
+    overflow-x: hidden;
+  }
+
+  .stepContent {
+    max-width: none;
+    width: 100%;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .cardTitleRow,
+  .instructionHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .grid2,
+  .addRowGrid,
+  .addMedGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .input,
+  .select,
+  .textarea {
+    width: 100%;
+    max-width: 100%;
+    font-size: 16px;
+  }
+
+  .footer {
+    position: sticky;
+    bottom: 0;
+    padding: 12px 16px;
+    gap: 12px;
+    flex-direction: column;
+  }
+
+  .footerNote,
+  .stepDots {
+    display: none;
+  }
+
+  .footerActions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .footerActions button {
+    flex: 1;
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+
+  .medHeader,
+  .medRow {
+    grid-template-columns: 70px 140px 90px 120px 100px 100px 40px !important;
+    min-width: 760px;
+  }
 }

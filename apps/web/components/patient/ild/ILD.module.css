@@ -54,3 +54,30 @@
   font-size: 12px;
   margin-top: 4px;
 }
+
+@media (max-width: 980px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .impactGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .doctorRow,
+  .apptRow,
+  .weeklyItem {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .kbildBox {
+    padding: 18px;
+  }
+
+  .kbildVal {
+    font-size: 40px;
+  }
+}

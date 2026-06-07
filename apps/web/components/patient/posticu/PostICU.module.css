@@ -43,4 +43,20 @@
   .milestoneBanner { align-items: flex-start; flex-direction: column; }
   .grid,
   .baselineGrid { grid-template-columns: 1fr; }
+
+  .vitalsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vitalBox {
+    border-right: none;
+  }
+
+  .baselineCard,
+  .milestoneItem,
+  .doctorRow,
+  .apptRow {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

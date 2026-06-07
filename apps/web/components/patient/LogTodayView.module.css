@@ -65,6 +65,7 @@
 
 .mmrcBtn {
   display: flex; align-items: center; gap: 12px;
+  min-height: 44px;
   padding: 12px 16px; border-radius: 10px;
   border: 1.5px solid rgba(0,0,0,0.08); background: #fafafa;
   cursor: pointer; text-align: left; transition: all 0.12s;
@@ -99,7 +100,7 @@
 .vasRow { display: flex; gap: 6px; margin-bottom: 8px; }
 
 .vasBtn {
-  flex: 1; height: 40px; border-radius: 8px;
+  flex: 1; min-height: 44px; height: 44px; border-radius: 8px;
   border: 1.5px solid rgba(0,0,0,0.1); background: #fafafa;
   font-size: 13px; font-weight: 600; color: #4a4a46;
   cursor: pointer; transition: all 0.12s;
@@ -156,6 +157,7 @@
 
 .symptomChip {
   display: flex; align-items: center; gap: 5px;
+  min-height: 40px;
   padding: 7px 14px; border-radius: 20px;
   font-size: 12px; font-weight: 500;
   border: 1.5px solid rgba(0,0,0,0.08); background: #fafafa;
@@ -194,7 +196,7 @@
 }
 
 .btnSubmit {
-  padding: 12px 28px; border-radius: 10px;
+  min-height: 48px; padding: 12px 28px; border-radius: 10px;
   font-size: 14px; font-weight: 700; cursor: pointer;
   border: none; background: #126969; color: white;
   font-family: var(--font-dm-sans), system-ui, sans-serif;
@@ -315,4 +317,59 @@
   text-transform: uppercase;
   color: #126969;
   margin-bottom: 4px;
+}
+
+@media (max-width: 760px) {
+  .view {
+    overflow-y: auto;
+  }
+
+  .header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .body {
+    padding: 14px 14px 84px;
+  }
+
+  .spo2Grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vasRow {
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+
+  .vasRow::-webkit-scrollbar {
+    display: none;
+  }
+
+  .vasBtn {
+    flex: 0 0 44px;
+  }
+
+  .mmrcBtn,
+  .medItem,
+  .limitActions,
+  .submitRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .medStatus,
+  .medStatusTaken,
+  .medStatusPending {
+    align-self: flex-start;
+  }
+
+  .btnSubmit,
+  .emergencySendBtn {
+    width: 100%;
+    justify-content: center;
+  }
 }

@@ -57,8 +57,10 @@
 
 .notifBtn {
   position: relative;
-  width: 34px;
-  height: 34px;
+  min-width: 40px;
+  min-height: 40px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   border: 1px solid rgba(255,255,255,0.15);
   background: rgba(255,255,255,0.06);
@@ -227,6 +229,7 @@
 .logoutBtn {
   display: flex; flex-direction: column; align-items: center;
   background: none; border: none; cursor: pointer; color: rgba(255,255,255,0.52);
+  min-height: 40px;
   padding: 4px 10px; border-radius: 6px; transition: background 0.15s;
 }
 .logoutBtn:hover { background: rgba(255,255,255,0.08); color: white; }
@@ -239,6 +242,7 @@
 
 .patientPill {
   display: flex; align-items: center; gap: 8px;
+  min-height: 40px;
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 20px;
@@ -408,8 +412,8 @@
   }
 
   .notifBtn {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
   }
 
   .logoutBtn {

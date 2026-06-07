@@ -90,6 +90,7 @@
 }
 
 .signOutBtn {
+  min-height: 40px;
   padding: 6px 14px;
   border-radius: 8px;
   font-size: 0.8rem;
@@ -111,6 +112,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 40px;
   background: #f1f4f5;
   border: 1px solid rgba(19, 45, 54, 0.1);
   border-radius: 999px;
@@ -147,8 +149,10 @@
 
 .notifBtn {
   position: relative;
-  width: 34px;
-  height: 34px;
+  min-width: 40px;
+  min-height: 40px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   border: 1px solid rgba(19,45,54,0.14);
   background: #ffffff;
@@ -288,6 +292,7 @@
 .approveBtn,
 .rejectBtn,
 .rescheduleBtn {
+  min-height: 40px;
   border: none;
   border-radius: 7px;
   padding: 8px 10px;
@@ -366,8 +371,8 @@
   }
 
   .notifBtn {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
   }
 
   .appointmentPanel {
