@@ -16,7 +16,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { Activity, Pill, TrendingDown, TrendingUp, Minus, ChevronDown } from "lucide-react";
+import { Activity, TrendingDown, TrendingUp, Minus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Sparkline } from "@/components/patient/shared";
 import dStyles from "@/components/patient/disease.module.css";
@@ -57,15 +57,6 @@ export interface CommonDashboardProps {
   accentColor?: string;
   /** Disease label shown in sub-header */
   diseaseLabel?: string;
-}
-
-interface MedRow {
-  id: string;
-  drug_name: string;
-  dose: number | null;
-  dose_unit: string | null;
-  route: string;
-  start_date: string;
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -111,8 +102,6 @@ export function CommonPatientDashboard({
   accentColor = "#126969",
   diseaseLabel = "Dashboard",
 }: CommonDashboardProps) {
-  const [medications, setMedications] = useState<MedRow[]>([]);
-  const [medicationsOpen, setMedicationsOpen] = useState(false);
   const [prevMmrc, setPrevMmrc] = useState<number | null>(null);
   const [prevSymptoms, setPrevSymptoms] = useState<Record<string, number>>({});
 
@@ -123,16 +112,6 @@ export function CommonPatientDashboard({
 
     setPrevMmrc(null);
     setPrevSymptoms({});
-
-    // Medications
-    supabase
-      .from("medications")
-      .select("id, drug_name, dose, dose_unit, route, start_date")
-      .eq("patient_id", patientId)
-      .order("start_date", { ascending: false })
-      .then(({ data }) => {
-        if (data) setMedications(data as MedRow[]);
-      });
 
     if (hasTodayLog === false) return;
 
@@ -294,55 +273,6 @@ export function CommonPatientDashboard({
         )}
       </div>
 
-      {/* ── Medications ── */}
-      {medications.length > 0 && (
-        <div className={dStyles.card}>
-          <button
-            type="button"
-            onClick={() => setMedicationsOpen((open) => !open)}
-            aria-expanded={medicationsOpen}
-            className={dStyles.medHeaderButton}
-          >
-            <Pill size={14} color={accentColor} />
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <p className={dStyles.cardTitle} style={{ margin: 0 }}>Current Medications · वर्तमान दवाएं</p>
-              <p className={dStyles.cardSub} style={{ margin: "3px 0 0" }}>
-                {medications.length} prescribed · Click to {medicationsOpen ? "hide" : "view"} medicines
-              </p>
-            </div>
-            <ChevronDown
-              size={18}
-              color="#6d8794"
-              style={{ transform: medicationsOpen ? "rotate(180deg)" : "none", transition: "transform 0.16s" }}
-            />
-          </button>
-          {medicationsOpen && (
-            <div className={dStyles.medicationList}>
-              {medications.map((med) => (
-                <div key={med.id} className={dStyles.medicationItem}>
-                  <div className={dStyles.medicationDot} style={{ background: accentColor }} />
-                  <div style={{ minWidth: 0 }}>
-                    <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: "#132d36", fontFamily: "var(--font-dm-sans), system-ui, sans-serif" }}>
-                      {med.drug_name}
-                      {med.dose !== null && (
-                        <span style={{ fontWeight: 500, color: "#6d8794" }}>
-                          {" "}{med.dose} {med.dose_unit ?? ""}
-                        </span>
-                      )}
-                    </p>
-                    <p style={{ margin: "2px 0 0", fontSize: 10, color: "#6d8794", fontFamily: "var(--font-dm-sans), system-ui, sans-serif" }}>
-                      {med.route} · Prescribed {fmtDate(med.start_date)} · लिखी गई
-                    </p>
-                  </div>
-                  <span style={{ fontSize: 10, color: accentColor, fontWeight: 700, fontFamily: "var(--font-dm-sans), system-ui, sans-serif" }}>
-                    Active
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }

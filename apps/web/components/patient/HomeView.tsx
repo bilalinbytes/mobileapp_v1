@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TrendingDown, TrendingUp, AlertTriangle, CheckCircle, Calendar, User } from "lucide-react";
-import { PATIENT_PROFILE, MEDICATIONS, SPO2_TREND, VAS_TREND, DAYS_14 } from "@/lib/mock-data";
+import { TrendingDown, TrendingUp, AlertTriangle, Calendar, User } from "lucide-react";
+import { PATIENT_PROFILE, SPO2_TREND, VAS_TREND, DAYS_14 } from "@/lib/mock-data";
 import { usePatient } from "@/contexts/PatientContext";
 import { DoctorNoteCard } from "./shared";
 import styles from "./HomeView.module.css";
@@ -183,36 +183,6 @@ export function HomeView({
                 <p className={styles.vitalSub} style={{ color: riskColor, textTransform: "capitalize" }}>{riskLevel}</p>
               </div>
             </div>
-          </div>
-
-          {/* ── Medication checklist ── */}
-          <div className={styles.medCard}>
-            <div className={styles.cardHeader}>
-              <p className={styles.cardTitle}>Today&apos;s Medications</p>
-              <span className={styles.medCount}>
-                {MEDICATIONS.filter(m => m.takenToday).length}/{MEDICATIONS.length} taken
-              </span>
-            </div>
-            <div className={styles.medList}>
-              {MEDICATIONS.map((med) => (
-                <div key={med.id} className={`${styles.medItem} ${med.takenToday ? styles.medTaken : styles.medMissed}`}>
-                  <div className={`${styles.medCheck} ${med.takenToday ? styles.medCheckDone : ""}`}>
-                    {med.takenToday && <CheckCircle size={14} strokeWidth={2.5} />}
-                  </div>
-                  <div className={styles.medInfo}>
-                    <p className={styles.medName}>{med.name} {med.dose}</p>
-                    <p className={styles.medFreq}>{med.route} · {med.frequency}</p>
-                  </div>
-                  {med.takenToday
-                    ? <span className={styles.medStatusTaken}>Taken {med.takenTimes?.[0]}</span>
-                    : <span className={styles.medStatusMissed}>Not taken</span>
-                  }
-                </div>
-              ))}
-            </div>
-            <button type="button" className={styles.btnOutline} onClick={onLogToday}>
-              Mark medications →
-            </button>
           </div>
 
           {/* ── SpO2 trend ── */}
